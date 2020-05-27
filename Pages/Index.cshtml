@@ -1,0 +1,44 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+
+<h1 class="my-4">
+    Page Heading
+    <small>Secondary Text</small>
+</h1>
+
+@foreach (var item in Model.Article)
+{
+    <div class="card mb-4">
+        <img class="card-img-top" src="@item.CoverPhoto" alt="@item.Title">
+        <div class="card-body">
+            <h2 class="card-title">@item.Title</h2>
+            <p class="card-text">@Html.Raw(item.Body)</p>
+            <a href="#" class="btn btn-primary">@item.Tags</a>
+            <!--TAG 作 模組 Partial view    Razor page(foreach)   -->
+            <!tags-helper>@item.Tags</!tags-helper>
+
+
+
+        </div>
+        <div class="card-footer text-muted">
+            Posted on @item.CreateDate.ToString("yyyy-MM-dd") by me
+        </div>
+    </div>
+}
+
+
+
+
+<!-- Pagination -->
+<ul class="pagination justify-content-center mb-4">
+    <li class="page-item">
+        <a class="page-link" href="#">&larr; Older</a>
+    </li>
+    <li class="page-item disabled">
+        <a class="page-link" href="#">Newer &rarr;</a>
+    </li>
+</ul>
