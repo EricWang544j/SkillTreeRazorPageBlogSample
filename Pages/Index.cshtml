@@ -5,8 +5,11 @@
 @using X.PagedList.Mvc.Core.Common
 @using SkillTreeRazorPageBlogSample.Helper
 
+
 @{
     ViewData["Title"] = "Home page";
+
+
 }
 
 
@@ -15,6 +18,11 @@
     <small>Secondary Text</small>
 </h1>
 
+
+@Html.PagedListPager((IPagedList)Model.Article,
+    page => Url.Page("index", Model.handler, new { p = page, tag = Model.tagName }), PagingOptionsHelper.FrontEnd)
+
+
 @foreach (var item in Model.Article)
 {
     <div class="card mb-4">
@@ -22,9 +30,14 @@
         <div class="card-body">
             <h2 class="card-title">@item.Title</h2>
             <p class="card-text">@Html.Raw(item.Body)</p>
-            <a href="#" class="btn btn-primary">@item.Tags</a>
             <!--TAG 作 模組 Partial view    Razor page(foreach)   -->
-            <!tags-helper>@item.Tags</!tags-helper>
+            old: @item.Tags
+            <br />
+            partial: <partial name="_TagsPartial" model="item.Tags"></partial>
+            <br />
+            tagHelper: <tags-helper>@item.Tags</tags-helper>
+            <br />
+            viewCommands:<vc:tags-vc tags="@item.Tags"></vc:tags-vc>
 
 
 
@@ -51,8 +64,4 @@
 
 <!-- Pagination -->
 <!-- Pagination 實作自定義分頁樣式 -->
-
-@Html.PagedListPager((IPagedList)Model.Article,
-    page => Url.Action("Index", new { p = page }), PagingOptionsHelper.FrontEnd)
-
 <!-- Pagination 實作自定義分頁樣式 -->

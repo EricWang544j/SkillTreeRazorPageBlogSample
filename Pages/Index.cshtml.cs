@@ -20,9 +20,6 @@ namespace SkillTreeRazorPageBlogSample.Pages
         private readonly RazorPageBlogContext _context;
 
 
-
-       
-
         public IndexModel(ILogger<IndexModel> logger, RazorPageBlogContext context)
         {
             _logger = logger;
@@ -46,12 +43,16 @@ namespace SkillTreeRazorPageBlogSample.Pages
 
         public IEnumerable<MyClass> Article { set; get; }
 
+        [ViewData]
+        public string handler { set; get; }
+        [ViewData]
+        public string tagName { set; get; }
+
 
 
 
         //public void OnGet()
         //{
-
         //    //Articles = _context.Articles.ToList();
         //    Article = _context
         //              .Articles.OrderBy(p=>p.Title)
@@ -68,9 +69,9 @@ namespace SkillTreeRazorPageBlogSample.Pages
         //    //Debug.WriteLine( Articles[0].Title );
         //}
 
-
-
         public void OnGet(int? p) {
+
+            //handler = "";
 
             var pageIndex = p.HasValue ? p.Value < 1 ? 1 : p.Value : 1;
 
@@ -85,7 +86,34 @@ namespace SkillTreeRazorPageBlogSample.Pages
 
             }).ToPagedList(pageIndex, 5);
 
-            
+        }
+
+
+        public void OnGetTag(string tag, int? p)
+        {
+             handler = "tag" ;
+             tagName = tag;
+
+
+            var pageIndex = p.HasValue ? p.Value < 1 ? 1 : p.Value : 1;
+
+            var qu = _context.Articles.AsQueryable();
+            if (string.IsNullOrWhiteSpace(tag)==false) {
+                qu = qu.Where(p => p.Tags.Contains(tag));
+            }
+
+            Article = qu.OrderBy(p => p.Title).Select(p => new MyClass
+            {
+                Id = p.Id,
+                CoverPhoto = p.CoverPhoto,
+                Title = p.Title,
+                Body = p.Body.Substring(0, 200),
+                CreateDate = p.CreateDate,
+                Tags = p.Tags
+
+            }).ToPagedList(pageIndex, 5);
+
+
         }
 
 
@@ -104,5 +132,6 @@ namespace SkillTreeRazorPageBlogSample.Pages
 
 
 
-    }
+
+        }
 }

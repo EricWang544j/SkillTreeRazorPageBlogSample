@@ -1,0 +1,11 @@
+﻿@model string
+@{ 
+
+    var tags =Model.Split(",");
+    foreach (var item in tags)
+    {
+        var tagUrl = Url.Page("index", "tag", new { tag = item  });
+        <a href="@tagUrl" class="btn btn-info"  >@item</a>
+    }
+}
+

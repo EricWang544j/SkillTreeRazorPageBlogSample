@@ -1,0 +1,10 @@
+﻿@model string[]
+
+@{
+
+    foreach (var item in Model)
+    {
+        var tagUrl = Url.Page("index", "tag", new { tag = item });
+        <a href="@tagUrl" class="btn btn-info">@item</a>
+    }
+}

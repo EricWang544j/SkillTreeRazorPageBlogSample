@@ -1,0 +1,51 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SkillTreeRazorPageBlogSample.Helper.Tag
+{
+    public class TagsHelper : TagHelper
+    {
+
+        private IUrlHelperFactory UrlHelperFactory { get; }
+        private IActionContextAccessor Accessor { get; }
+
+        //要註冊 services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+        public TagsHelper(IUrlHelperFactory urlHelperFactory, IActionContextAccessor accessor)
+        {
+            UrlHelperFactory = urlHelperFactory;
+            Accessor = accessor;
+        }
+
+        public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
+
+
+            var actionContext = Accessor.ActionContext;
+            var urlHelper = UrlHelperFactory.GetUrlHelper(actionContext);
+            output.TagName = "ul";
+
+            var content = await output.GetChildContentAsync();
+            if (string.IsNullOrWhiteSpace(content.GetContent()) == false)
+            {
+                var tags = content.GetContent().Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var sb = new StringBuilder();
+                foreach (var tag in tags)
+                {
+                    sb.AppendFormat("<li class='d-inline p-1' ><a href='{0}' class='btn btn-info'>{1}</a></li>",
+                                    urlHelper.Page("index", "tag", new { tag = tag }), tag);
+                }
+
+                output.Content.SetHtmlContent(sb.ToString());
+            }
+
+            //output.Content.SetHtmlContent("<h1>ewfewgfergregr</h1>");
+
+        }
+    }
+}

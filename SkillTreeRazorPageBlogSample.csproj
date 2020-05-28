@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helper\Tag\" />
+    <Folder Include="Pages\Components\TagCloud\" />
   </ItemGroup>
 
 </Project>
