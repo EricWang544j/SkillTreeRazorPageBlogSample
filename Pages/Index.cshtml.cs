@@ -44,9 +44,13 @@ namespace SkillTreeRazorPageBlogSample.Pages
         public IEnumerable<MyClass> Article { set; get; }
 
         [ViewData]
-        public string handler { set; get; }
+        public string handler { set; get; }   //記錄tag的字串，供tag後的分頁使用
         [ViewData]
-        public string tagName { set; get; }
+        public string tagName { set; get; }   //記錄tag的字串，供tag後的分頁使用
+        [ViewData]
+        public string search_q { set; get; }  //記錄search的字串，供search後的分頁使用
+
+
 
 
 
@@ -69,13 +73,25 @@ namespace SkillTreeRazorPageBlogSample.Pages
         //    //Debug.WriteLine( Articles[0].Title );
         //}
 
-        public void OnGet(int? p) {
-
-            //handler = "";
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p">頁次</param>
+        /// <param name="q">search的字串</param>
+        public void OnGet(int? p , string q) {
 
             var pageIndex = p.HasValue ? p.Value < 1 ? 1 : p.Value : 1;
+            var qu = _context.Articles.AsQueryable();
+            if (string.IsNullOrWhiteSpace(q) == false) {
 
-            Article = _context.Articles.OrderBy(p => p.Title).Select(p => new MyClass
+                search_q = q;
+
+                qu = qu.Where(p => p.Body.Contains(q));
+
+            }
+
+
+            Article = qu.OrderBy(p => p.Title).Select(p => new MyClass
             {
                 Id = p.Id,
                 CoverPhoto = p.CoverPhoto,

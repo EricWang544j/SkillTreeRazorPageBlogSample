@@ -20,7 +20,7 @@
 
 
 @Html.PagedListPager((IPagedList)Model.Article,
-    page => Url.Page("index", Model.handler, new { p = page, tag = Model.tagName }), PagingOptionsHelper.FrontEnd)
+    page => Url.Page("index", Model.handler, new { p = page, q=Model.search_q , tag = Model.tagName }), PagingOptionsHelper.FrontEnd)
 
 
 @foreach (var item in Model.Article)
