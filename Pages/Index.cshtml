@@ -1,5 +1,10 @@
 ﻿@page
 @model IndexModel
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Core.Common
+@using SkillTreeRazorPageBlogSample.Helper
+
 @{
     ViewData["Title"] = "Home page";
 }
@@ -30,15 +35,24 @@
     </div>
 }
 
+<!-- Pagination -->
+@*@Html.PagedListPager(    (IPagedList)Model.Article ,
+    page => Url.Action("Index", new { p = page }), PagedListRenderOptions.TwitterBootstrapPagerAligned )*@
 
 
+@*<ul class="pagination justify-content-center mb-4">
+        <li class="page-item">
+            <a class="page-link" href="#">&larr; Older</a>
+        </li>
+        <li class="page-item disabled">
+            <a class="page-link" href="#">Newer &rarr;</a>
+        </li>
+    </ul>*@
 
 <!-- Pagination -->
-<ul class="pagination justify-content-center mb-4">
-    <li class="page-item">
-        <a class="page-link" href="#">&larr; Older</a>
-    </li>
-    <li class="page-item disabled">
-        <a class="page-link" href="#">Newer &rarr;</a>
-    </li>
-</ul>
+<!-- Pagination 實作自定義分頁樣式 -->
+
+@Html.PagedListPager((IPagedList)Model.Article,
+    page => Url.Action("Index", new { p = page }), PagingOptionsHelper.FrontEnd)
+
+<!-- Pagination 實作自定義分頁樣式 -->

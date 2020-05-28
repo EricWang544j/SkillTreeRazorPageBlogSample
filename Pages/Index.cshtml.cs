@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SkillTreeRazorPageBlogSample.Data;
+using X.PagedList;
+using X.PagedList.Mvc.Core.Common;
 
 namespace SkillTreeRazorPageBlogSample.Pages
 {
@@ -15,10 +17,11 @@ namespace SkillTreeRazorPageBlogSample.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-
         private readonly RazorPageBlogContext _context;
 
-        public List<MyClass> Article { set; get; }
+
+
+       
 
         public IndexModel(ILogger<IndexModel> logger, RazorPageBlogContext context)
         {
@@ -41,30 +44,62 @@ namespace SkillTreeRazorPageBlogSample.Pages
         }
 
 
-        
-
-        public void OnGet()
-        {
-
-            //Articles = _context.Articles.ToList();
-            Article = _context
-                      .Articles
-                      .Select(d => new MyClass
-                      {
-                          Id = d.Id,
-                          CoverPhoto = d.CoverPhoto,
-                          Title = d.Title,
-                          Body = d.Body.Substring(0, 200),
-                          CreateDate = d.CreateDate,
-                          Tags = d.Tags
-                      })
-                      .ToList();
+        public IEnumerable<MyClass> Article { set; get; }
 
 
 
-            //Debug.WriteLine( Articles[0].Title );
 
+        //public void OnGet()
+        //{
+
+        //    //Articles = _context.Articles.ToList();
+        //    Article = _context
+        //              .Articles.OrderBy(p=>p.Title)
+        //              .Select(d => new MyClass
+        //              {
+        //                  Id = d.Id,
+        //                  CoverPhoto = d.CoverPhoto,
+        //                  Title = d.Title,
+        //                  Body = d.Body.Substring(0, 200),
+        //                  CreateDate = d.CreateDate,
+        //                  Tags = d.Tags
+        //              })
+        //              .ToList();
+        //    //Debug.WriteLine( Articles[0].Title );
+        //}
+
+
+
+        public void OnGet(int? p) {
+
+            var pageIndex = p.HasValue ? p.Value < 1 ? 1 : p.Value : 1;
+
+            Article = _context.Articles.OrderBy(p => p.Title).Select(p => new MyClass
+            {
+                Id = p.Id,
+                CoverPhoto = p.CoverPhoto,
+                Title = p.Title,
+                Body = p.Body.Substring(0, 200),
+                CreateDate = p.CreateDate,
+                Tags = p.Tags
+
+            }).ToPagedList(pageIndex, 5);
+
+            
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
